@@ -89,19 +89,19 @@ namespace SmashPuzzle.Core
             DestroyNamed("TableLeg_BL");
             DestroyNamed("TableLeg_BR");
 
-            // 테이블 상판
+            // 테이블 상판 — Z 깊이 2.6으로 확장 (블록 앞뒤 배치 지원)
             var top = GameObject.CreatePrimitive(PrimitiveType.Cube);
             top.name = "Table";
             top.transform.position   = new Vector3(0f, TableTopY - 0.1f, TableZ);
-            top.transform.localScale = new Vector3(4.0f, 0.2f, 1.6f);
+            top.transform.localScale = new Vector3(4.0f, 0.2f, 2.6f);
             SetLayer(top, "Ground", 8);
             ApplyColor(top, new Color(0.70f, 0.45f, 0.15f)); // 나무색
 
-            // 다리 4개
-            CreateLeg("TableLeg_FL", -1.8f,  TableZ - 0.6f);
-            CreateLeg("TableLeg_FR",  1.8f,  TableZ - 0.6f);
-            CreateLeg("TableLeg_BL", -1.8f,  TableZ + 0.6f);
-            CreateLeg("TableLeg_BR",  1.8f,  TableZ + 0.6f);
+            // 다리 4개 (테이블 깊이에 맞게 위치 조정)
+            CreateLeg("TableLeg_FL", -1.8f,  TableZ - 1.1f);
+            CreateLeg("TableLeg_FR",  1.8f,  TableZ - 1.1f);
+            CreateLeg("TableLeg_BL", -1.8f,  TableZ + 1.1f);
+            CreateLeg("TableLeg_BR",  1.8f,  TableZ + 1.1f);
         }
 
         private static void CreateLeg(string legName, float x, float z)

@@ -27,7 +27,7 @@ namespace SmashPuzzle.Projectile
         {
             _rb  = GetComponent<Rigidbody>();
             _col = GetComponent<SphereCollider>();
-            _col.radius = 0.15f;
+            _col.radius = 0.5f;  // 시각적 구체와 일치 → 더 넓은 히트박스
             int pL = LayerMask.NameToLayer("Projectile");
             gameObject.layer = pL >= 0 ? pL : 6;
             _cam = Camera.main;

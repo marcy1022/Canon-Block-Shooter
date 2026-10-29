@@ -88,7 +88,7 @@ namespace SmashPuzzle.Level
 
             foreach (var obj in data.objects)
             {
-                Vector3    pos = new Vector3(obj.x, obj.y + Y_OFFSET, TABLE_Z);
+                Vector3    pos = new Vector3(obj.x, obj.y + Y_OFFSET, TABLE_Z + obj.z);
                 Quaternion rot = Quaternion.Euler(0f, 0f, obj.rotation);
                 GameObject go  = CreateDestructible(obj.type, pos, rot);
                 if (go == null) continue;
@@ -138,8 +138,9 @@ namespace SmashPuzzle.Level
                     ApplyColor(go, new Color(0.75f, 0.65f, 0.50f)); // 연한 돌 색
                     break;
                 case "Wood":
-                    go = CreateBase(PrimitiveType.Cube, pos, rot, new Vector3(0.45f, 1.0f, 0.45f), "Destructible", 7);
-                    SetupDestructible(go, ObjectType.Wood, 2f, false, 0.5f, 0.8f);
+                    // 얇은 직사각 도미노 형태 — 쓰러졌을 때 옆 블록을 연쇄로 맞춤
+                    go = CreateBase(PrimitiveType.Cube, pos, rot, new Vector3(0.35f, 1.0f, 0.35f), "Destructible", 7);
+                    SetupDestructible(go, ObjectType.Wood, 2f, false, 0.25f, 0.8f);
                     ApplyColor(go, new Color(0.72f, 0.50f, 0.28f)); // 나무 갈색
                     break;
                 case "TNT":
@@ -197,7 +198,8 @@ namespace SmashPuzzle.Level
                 case ObjectType.Pillar:
                     friction = 0.60f; bounce = 0.08f; break;
                 case ObjectType.Wood:
-                    friction = 0.50f; bounce = 0.12f; break;
+                    // 블록 간 연쇄 쓰러짐이 잘 되도록 마찰 낮춤
+                    friction = 0.30f; bounce = 0.15f; break;
                 case ObjectType.Jar:
                     friction = 0.40f; bounce = 0.20f; break;
                 default:

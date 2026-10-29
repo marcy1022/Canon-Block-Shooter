@@ -6,9 +6,10 @@
   "star3Threshold": 2,
   "coinRewardBase": 80,
   "objects": [
-    { "type": "Wood", "x": -0.6, "y": -5.15, "rotation":  0, "isTarget": false, "groupId": -1 },
-    { "type": "Wood", "x":  0.6, "y": -5.15, "rotation":  0, "isTarget": false, "groupId": -1 },
-    { "type": "Wood", "x":  0.0, "y": -4.43, "rotation": 90, "isTarget": false, "groupId": -1 },
-    { "type": "Wood", "x":  0.0, "y": -3.71, "rotation":  0, "isTarget": false, "groupId": -1 }
+    { "type": "Wood", "x": -0.35, "y": -5.15, "z": -0.4, "rotation": 0, "isTarget": false, "groupId": -1 },
+    { "type": "Wood", "x":  0.0,  "y": -5.15, "z": -0.4, "rotation": 0, "isTarget": false, "groupId": -1 },
+    { "type": "Wood", "x":  0.35, "y": -5.15, "z": -0.4, "rotation": 0, "isTarget": false, "groupId": -1 },
+    { "type": "Wood", "x": -0.35, "y": -5.15, "z":  0.4, "rotation": 0, "isTarget": false, "groupId": -1 },
+    { "type": "Wood", "x":  0.35, "y": -5.15, "z":  0.4, "rotation": 0, "isTarget": false, "groupId": -1 }
   ]
 }

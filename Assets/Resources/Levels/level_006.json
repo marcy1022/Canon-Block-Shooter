@@ -6,12 +6,12 @@
   "star3Threshold": 4,
   "coinRewardBase": 100,
   "objects": [
-    { "type": "Wood", "x": -1.4, "y": -5.15, "rotation":  0, "isTarget": false, "groupId": -1 },
-    { "type": "Wood", "x": -1.4, "y": -4.15, "rotation":  0, "isTarget": false, "groupId": -1 },
-    { "type": "TNT",  "x": -0.8, "y": -5.35, "rotation":  0, "isTarget": false, "groupId": -1 },
-    { "type": "TNT",  "x":  0.0, "y": -5.35, "rotation":  0, "isTarget": false, "groupId": -1 },
-    { "type": "TNT",  "x":  0.8, "y": -5.35, "rotation":  0, "isTarget": false, "groupId": -1 },
-    { "type": "Wood", "x":  1.4, "y": -5.15, "rotation":  0, "isTarget": false, "groupId": -1 },
-    { "type": "Wood", "x":  1.4, "y": -4.15, "rotation":  0, "isTarget": false, "groupId": -1 }
+    { "type": "Wood", "x": -1.3, "y": -5.15, "z": -0.35, "rotation": 0, "isTarget": false, "groupId": -1 },
+    { "type": "Wood", "x": -1.3, "y": -4.15, "z": -0.35, "rotation": 0, "isTarget": false, "groupId": -1 },
+    { "type": "TNT",  "x": -0.7, "y": -5.35, "z":  0.0,  "rotation": 0, "isTarget": false, "groupId": -1 },
+    { "type": "TNT",  "x":  0.0, "y": -5.35, "z":  0.0,  "rotation": 0, "isTarget": false, "groupId": -1 },
+    { "type": "TNT",  "x":  0.7, "y": -5.35, "z":  0.0,  "rotation": 0, "isTarget": false, "groupId": -1 },
+    { "type": "Wood", "x":  1.3, "y": -5.15, "z":  0.35, "rotation": 0, "isTarget": false, "groupId": -1 },
+    { "type": "Wood", "x":  1.3, "y": -4.15, "z":  0.35, "rotation": 0, "isTarget": false, "groupId": -1 }
   ]
 }

@@ -51,26 +51,27 @@ namespace SmashPuzzle.Projectile
             var go = GameObject.CreatePrimitive(PrimitiveType.Sphere);
             go.name = "Cannonball";
             go.transform.SetParent(transform);
-            go.transform.localScale = Vector3.one * 0.3f;
+            // 큰 대포알: 블록 모서리도 확실히 히트
+            go.transform.localScale = Vector3.one * 0.45f;
             go.layer = Layer("Projectile", 6);
 
             var col = go.GetComponent<SphereCollider>();
             if (col != null)
             {
-                col.radius = 0.5f; // Cannonball.Awake에서 0.15로 재설정됨
+                col.radius = 0.5f;
                 var mat = new PhysicsMaterial("PM_Cannonball")
                 {
-                    bounciness      = 0.6f,
-                    dynamicFriction = 0.05f,
-                    staticFriction  = 0.05f,
-                    bounceCombine   = PhysicsMaterialCombine.Maximum,  // 두 물체 중 높은 쪽 사용
-                    frictionCombine = PhysicsMaterialCombine.Minimum,
+                    bounciness      = 0.75f,  // 탄성 높여서 튕김 지속
+                    dynamicFriction = 0.25f,  // 마찰 높여서 모서리 타격 시 반사각 커짐
+                    staticFriction  = 0.25f,
+                    bounceCombine   = PhysicsMaterialCombine.Maximum,
+                    frictionCombine = PhysicsMaterialCombine.Average, // 블록 마찰과 평균
                 };
                 col.material = mat;
             }
 
             var rb = go.AddComponent<Rigidbody>();
-            rb.mass           = 3f; // 무거운 포탄 — 블록에 충분한 모멘텀 전달
+            rb.mass           = 4f; // 크기 커진 만큼 무게도 증가 — 블록 연쇄 타격
             rb.linearDamping  = 0f;
             rb.angularDamping = 0.05f;
             rb.constraints    = RigidbodyConstraints.None; // 3D 자유 운동
