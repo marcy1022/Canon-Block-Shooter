@@ -57,9 +57,9 @@ namespace SmashPuzzle.Core
             cam.farClipPlane  = 100f;
             cam.backgroundColor = new Color(0.40f, 0.65f, 0.90f);
             cam.clearFlags      = CameraClearFlags.SolidColor;
-            // 대포(0,0.4,0) 뒤에서 테이블(0,1.5,4) 방향을 바라봄
+            // 대포(0,0.4,0) 뒤에서 테이블(0,1.5,4.5) 방향을 바라봄
             cam.transform.position = new Vector3(0f, 2.2f, -3.0f);
-            cam.transform.LookAt(new Vector3(0f, 1.2f, 4f));
+            cam.transform.LookAt(new Vector3(0f, 1.2f, 4.5f));
         }
 
         // ── Ground ────────────────────────────────────────────────────────────
@@ -78,7 +78,7 @@ namespace SmashPuzzle.Core
 
         // ── Table (받침대, 고정) ───────────────────────────────────────────────
         // 테이블은 Ground 레이어 → 파괴 불가, 블록들이 위에 놓임
-        public const float TableZ    = 4.0f;  // LevelLoader에서 참조
+        public const float TableZ    = 4.5f;  // LevelLoader에서 참조
         public const float TableTopY = 1.3f;  // 테이블 윗면 Y (블록 스택 기준)
 
         private static void RecreateTable()

@@ -51,8 +51,7 @@ namespace SmashPuzzle.Projectile
             var go = GameObject.CreatePrimitive(PrimitiveType.Sphere);
             go.name = "Cannonball";
             go.transform.SetParent(transform);
-            // 큰 대포알: 블록 모서리도 확실히 히트
-            go.transform.localScale = Vector3.one * 0.45f;
+            go.transform.localScale = Vector3.one * 0.35f;
             go.layer = Layer("Projectile", 6);
 
             var col = go.GetComponent<SphereCollider>();

@@ -12,7 +12,8 @@ namespace SmashPuzzle.Cannon
         [SerializeField] private LayerMask collisionMask;
         [SerializeField] private Transform firePoint;
 
-        private const float LaunchPitchDeg = 25f;
+        private const float LaunchPitchMin = 18f;
+        private const float LaunchPitchMax = 42f;
 
         private LineRenderer     _lr;
         private CannonController _cannon;
@@ -92,7 +93,11 @@ namespace SmashPuzzle.Cannon
             if (forward.sqrMagnitude < 0.001f) forward = Vector3.forward;
             forward.Normalize();
 
-            float pitchRad = LaunchPitchDeg * Mathf.Deg2Rad;
+            float forceT   = (_cannon != null)
+                ? Mathf.InverseLerp(_cannon.minForce, _cannon.maxForce, _cannon.CurrentForce)
+                : 0f;
+            float pitchDeg = Mathf.Lerp(LaunchPitchMin, LaunchPitchMax, forceT);
+            float pitchRad = pitchDeg * Mathf.Deg2Rad;
             Vector3 dir    = (forward * Mathf.Cos(pitchRad) + Vector3.up * Mathf.Sin(pitchRad)).normalized;
             Vector3 vel    = dir * _cannon.CurrentForce;
             Vector3 gravity = Physics.gravity;

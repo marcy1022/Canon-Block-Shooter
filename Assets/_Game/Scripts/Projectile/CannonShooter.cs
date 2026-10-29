@@ -8,8 +8,9 @@ namespace SmashPuzzle.Projectile
         [SerializeField] private Transform    firePoint;
         [SerializeField] private ProjectilePool pool;
 
-        // 수직 발사각 (고정) — 대포 높이에서 테이블 높이까지 포물선이 도달하도록 조정
-        private const float LaunchPitchDeg = 25f;
+        // 수직 발사각 — 파워 게이지에 따라 가변 (낮은 힘=낮은 각, 높은 힘=높은 각)
+        private const float LaunchPitchMin = 18f;
+        private const float LaunchPitchMax = 42f;
 
         private CannonController _cannon;
 
@@ -66,7 +67,12 @@ namespace SmashPuzzle.Projectile
                 forward = new Vector3(Mathf.Sin(rad), 0f, Mathf.Cos(rad));
             }
 
-            float pitchRad = LaunchPitchDeg * Mathf.Deg2Rad;
+            // 파워 게이지 0→1 비율에 따라 발사각 보간
+            float forceT   = (_cannon != null)
+                ? Mathf.InverseLerp(_cannon.minForce, _cannon.maxForce, force)
+                : 0f;
+            float pitchDeg = Mathf.Lerp(LaunchPitchMin, LaunchPitchMax, forceT);
+            float pitchRad = pitchDeg * Mathf.Deg2Rad;
             Vector3 dir = (forward * Mathf.Cos(pitchRad) + Vector3.up * Mathf.Sin(pitchRad)).normalized;
 
             ball.Launch(dir, force);

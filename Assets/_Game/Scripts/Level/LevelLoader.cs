@@ -79,7 +79,7 @@ namespace SmashPuzzle.Level
 
         // JSON의 x/y(2D 지면 기준)를 3D 테이블 위 위치로 변환
         // Y 오프셋: 테이블 윗면(1.3) - 구 지면 상면(-5.65) = 6.95
-        private const float TABLE_Z    = 4.0f;
+        private const float TABLE_Z    = 4.5f;
         private const float Y_OFFSET   = 6.95f;
 
         private void SpawnObjects(LevelJsonData data)
