@@ -242,7 +242,7 @@ namespace SmashPuzzle.UI
                 new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0, -40));
             _clearCoinText.GetComponent<RectTransform>().sizeDelta = new Vector2(500, 60);
 
-            // 다음 레벨 버튼 (PlayerPrefs에서 현재 레벨을 읽어 +1, 최대 10)
+            // 다음 레벨 버튼 — 블록 재스폰 방식으로 다음 레벨 진입
             MakeButton(panel.transform, "NextLevel", "다음 레벨",
                 new Vector2(0, -200), new Vector2(280, 80),
                 new Color(0.2f, 0.7f, 0.3f), () =>
@@ -250,15 +250,17 @@ namespace SmashPuzzle.UI
                     int cur  = PlayerPrefs.GetInt("CurrentLevel", 1);
                     int next = Mathf.Min(cur + 1, 10);
                     PlayerPrefs.SetInt("CurrentLevel", next);
-                    ReloadScene();
+                    DoRestartLevel(next);
                 });
 
-            // 다시하기 버튼
+            // 다시하기 버튼 — 현재 레벨 원상복구 (씬 리로드 없이 블록 재스폰)
             MakeButton(panel.transform, "Retry", "다시하기",
                 new Vector2(0, -300), new Vector2(280, 80),
                 new Color(0.6f, 0.3f, 0.1f), () =>
                 {
-                    ReloadScene();
+                    int cur = PlayerPrefs.GetInt("CurrentLevel", 1);
+                    if (cur < 1 || cur > 10) cur = 1;
+                    DoRestartLevel(cur);
                 });
 
             return panel.gameObject;
@@ -286,13 +288,49 @@ namespace SmashPuzzle.UI
                 new Vector2(0, -150), new Vector2(280, 80),
                 new Color(0.6f, 0.3f, 0.1f), () =>
                 {
-                    ReloadScene();
+                    int cur = PlayerPrefs.GetInt("CurrentLevel", 1);
+                    if (cur < 1 || cur > 10) cur = 1;
+                    DoRestartLevel(cur);
                 });
 
             return panel.gameObject;
         }
 
-        // 씬 리로드: buildIndex 우선, 미등록 씬이면 이름으로 폴백
+        // 현재 레벨 재시작 — 씬 리로드 없이 블록만 재스폰하고 상태 초기화
+        private void DoRestartLevel(int levelId)
+        {
+            StopAllCoroutines();        // 진행 중인 클리어/실패 애니메이션 취소
+            Time.timeScale = 1f;
+
+            // UI 상태 초기화
+            _clearShown = false;
+            _failShown  = false;
+            if (_clearPanel != null) _clearPanel.SetActive(false);
+            if (_failPanel  != null) _failPanel.SetActive(false);
+
+            // 대포 잠금 해제 + 정면 방향으로 복귀
+            var cannon = Object.FindFirstObjectByType<SmashPuzzle.Cannon.CannonController>();
+            if (cannon != null)
+            {
+                cannon.SetLocked(false);
+                cannon.transform.rotation = Quaternion.identity;
+            }
+
+            // 블록 파괴 → 재스폰 → 레벨 매니저 초기화 (잔탄·클리어 상태 모두 리셋)
+            var loader  = SmashPuzzle.Level.LevelLoader.Instance;
+            var manager = SmashPuzzle.Level.LevelManager.Instance;
+
+            if (loader == null || manager == null)
+            {
+                ReloadScene();  // 폴백: 전체 씬 리로드
+                return;
+            }
+
+            if (loader.LoadLevel(levelId) && loader.CurrentLevelData != null)
+                manager.InitLevel(loader.CurrentLevelData);
+        }
+
+        // 씬 리로드: buildIndex 우선, 미등록 씬이면 이름으로 폴백 (다음 레벨용)
         private static void ReloadScene()
         {
             Time.timeScale = 1f;
