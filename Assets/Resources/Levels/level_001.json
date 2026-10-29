@@ -6,8 +6,7 @@
   "star3Threshold": 3,
   "coinRewardBase": 50,
   "objects": [
-    { "type": "Wood", "x": -0.7, "y": -5.15, "rotation":  0, "isTarget": false, "groupId": -1 },
-    { "type": "Wood", "x":  0.0, "y": -5.15, "rotation":  0, "isTarget": false, "groupId": -1 },
-    { "type": "Wood", "x":  0.7, "y": -5.15, "rotation":  0, "isTarget": false, "groupId": -1 }
+    { "type": "Wood", "x": -0.4, "y": -5.15, "rotation": 0, "isTarget": false, "groupId": -1 },
+    { "type": "Wood", "x":  0.4, "y": -5.15, "rotation": 0, "isTarget": false, "groupId": -1 }
   ]
 }
