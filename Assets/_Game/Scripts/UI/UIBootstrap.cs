@@ -12,6 +12,7 @@ namespace SmashPuzzle.UI
     [DefaultExecutionOrder(-50)]
     public class UIBootstrap : MonoBehaviour
     {
+        private Text _levelText;
         private Text _shotText;
         private GameObject _clearPanel;
         private Text _clearStarText;
@@ -34,7 +35,10 @@ namespace SmashPuzzle.UI
         {
             // Start() 시점에 이미 InitLevel이 완료된 경우(씬 재로드 후 등) 즉시 반영
             if (LevelManager.Instance != null && LevelManager.Instance.IsInitialized)
+            {
                 UpdateShots(LevelManager.Instance.ShotsRemaining);
+                UpdateLevelDisplay();
+            }
         }
 
         private void Update()
@@ -73,7 +77,7 @@ namespace SmashPuzzle.UI
 
         private void OnEnable()
         {
-            LevelManager.OnLevelInitialized.AddListener(UpdateShots);
+            LevelManager.OnLevelInitialized.AddListener(OnLevelInit);
             LevelManager.OnStarRating.AddListener(ShowClear);
             LevelManager.OnShotFired.AddListener(UpdateShots);
             LevelManager.OnLevelFail.AddListener(ShowFail);
@@ -82,11 +86,24 @@ namespace SmashPuzzle.UI
 
         private void OnDisable()
         {
-            LevelManager.OnLevelInitialized.RemoveListener(UpdateShots);
+            LevelManager.OnLevelInitialized.RemoveListener(OnLevelInit);
             LevelManager.OnStarRating.RemoveListener(ShowClear);
             LevelManager.OnShotFired.RemoveListener(UpdateShots);
             LevelManager.OnLevelFail.RemoveListener(ShowFail);
             SmashPuzzle.Cannon.CannonController.OnFireRequested -= OnFire;
+        }
+
+        private void OnLevelInit(int remaining)
+        {
+            UpdateShots(remaining);
+            UpdateLevelDisplay();
+        }
+
+        private void UpdateLevelDisplay()
+        {
+            if (_levelText == null) return;
+            int levelId = PlayerPrefs.GetInt("CurrentLevel", 1);
+            _levelText.text = $"Level {levelId}";
         }
 
         private void OnFire(float a, float f)
@@ -158,6 +175,9 @@ namespace SmashPuzzle.UI
 
         private void ShowFail()
         {
+            // 실패 패널이 열릴 때 대포 잠금 → 버튼 클릭이 발사로 이어지지 않음
+            var cannon = Object.FindFirstObjectByType<SmashPuzzle.Cannon.CannonController>();
+            cannon?.SetLocked(true);
             if (_failPanel != null) _failPanel.SetActive(true);
         }
 
@@ -197,19 +217,25 @@ namespace SmashPuzzle.UI
         // ── HUD ─────────────────────────────────────────────────────
         private void BuildHUD(Canvas canvas)
         {
-            // pivot=(0,1): top-left 앵커를 쓸 때 anchoredPosition이 패널의 좌상단 기준으로 계산됨
             var hud = MakePanel(canvas.transform, "HUD",
                 new Vector2(0, 1), new Vector2(0, 1), new Vector2(10, -10),
-                new Vector2(300, 60), Color.clear);
+                new Vector2(320, 110), Color.clear);
             hud.pivot = new Vector2(0, 1);
 
+            // 현재 레벨 표시 (상단)
+            _levelText = MakeText(hud.transform, "LevelDisplay", "Level -",
+                TextAnchor.MiddleLeft, 38, new Color(1f, 0.95f, 0.6f),
+                new Vector2(0, 1), new Vector2(0, 1), new Vector2(8, -22));
+            _levelText.GetComponent<RectTransform>().sizeDelta = new Vector2(280, 44);
+            var lo = _levelText.gameObject.AddComponent<UnityEngine.UI.Outline>();
+            lo.effectColor    = Color.black;
+            lo.effectDistance = new Vector2(2f, -2f);
+
+            // 잔탄 표시 (하단)
             _shotText = MakeText(hud.transform, "ShotCount", "Remain : -",
                 TextAnchor.MiddleLeft, 40, Color.white,
-                new Vector2(0, 0.5f), new Vector2(0, 0.5f), new Vector2(150, 0));
-            var shotRt = _shotText.GetComponent<RectTransform>();
-            shotRt.sizeDelta = new Vector2(300, 60);
-
-            // 가독성을 위한 검은 외곽선
+                new Vector2(0, 1), new Vector2(0, 1), new Vector2(8, -68));
+            _shotText.GetComponent<RectTransform>().sizeDelta = new Vector2(300, 48);
             var outline = _shotText.gameObject.AddComponent<UnityEngine.UI.Outline>();
             outline.effectColor    = Color.black;
             outline.effectDistance = new Vector2(2f, -2f);
@@ -299,35 +325,43 @@ namespace SmashPuzzle.UI
         // 현재 레벨 재시작 — 씬 리로드 없이 블록만 재스폰하고 상태 초기화
         private void DoRestartLevel(int levelId)
         {
-            StopAllCoroutines();        // 진행 중인 클리어/실패 애니메이션 취소
+            StopAllCoroutines();
             Time.timeScale = 1f;
 
-            // UI 상태 초기화
             _clearShown = false;
             _failShown  = false;
             if (_clearPanel != null) _clearPanel.SetActive(false);
             if (_failPanel  != null) _failPanel.SetActive(false);
 
-            // 대포 잠금 해제 + 정면 방향으로 복귀
+            // 대포는 잠금 상태로 시작 — 버튼 클릭이 발사로 이어지는 버그 방지
             var cannon = Object.FindFirstObjectByType<SmashPuzzle.Cannon.CannonController>();
             if (cannon != null)
             {
-                cannon.SetLocked(false);
+                cannon.SetLocked(true);
                 cannon.transform.rotation = Quaternion.identity;
             }
 
-            // 블록 파괴 → 재스폰 → 레벨 매니저 초기화 (잔탄·클리어 상태 모두 리셋)
             var loader  = SmashPuzzle.Level.LevelLoader.Instance;
             var manager = SmashPuzzle.Level.LevelManager.Instance;
 
             if (loader == null || manager == null)
             {
-                ReloadScene();  // 폴백: 전체 씬 리로드
+                ReloadScene();
                 return;
             }
 
             if (loader.LoadLevel(levelId) && loader.CurrentLevelData != null)
                 manager.InitLevel(loader.CurrentLevelData);
+
+            // 버튼 입력이 완전히 소화된 뒤 잠금 해제 (0.4초 딜레이)
+            StartCoroutine(UnlockCannonAfterDelay(cannon, 0.4f));
+        }
+
+        private static IEnumerator UnlockCannonAfterDelay(
+            SmashPuzzle.Cannon.CannonController cannon, float delay)
+        {
+            yield return new WaitForSecondsRealtime(delay);
+            cannon?.SetLocked(false);
         }
 
         // 씬 리로드: buildIndex 우선, 미등록 씬이면 이름으로 폴백 (다음 레벨용)

@@ -40,6 +40,7 @@ namespace SmashPuzzle.Level
 
         public bool LoadLevel(int levelId)
         {
+            StopAllCoroutines();
             ClearLevel();
 
             string path = $"Levels/level_{levelId:D3}";
@@ -57,8 +58,23 @@ namespace SmashPuzzle.Level
                 return false;
             }
 
+            // 블록을 Kinematic으로 스폰 → 물리 충돌 없이 정위치에 배치
             SpawnObjects(CurrentLevelData);
+            // 2 FixedUpdate 후 물리 활성화 (이전 블록 Destroy 완료 + 스폰 안정)
+            StartCoroutine(EnablePhysicsAfterDelay());
             return true;
+        }
+
+        private System.Collections.IEnumerator EnablePhysicsAfterDelay()
+        {
+            yield return new UnityEngine.WaitForFixedUpdate();
+            yield return new UnityEngine.WaitForFixedUpdate();
+            foreach (var go in _spawnedObjects)
+            {
+                if (go == null) continue;
+                var rb = go.GetComponent<Rigidbody>();
+                if (rb != null) rb.isKinematic = false;
+            }
         }
 
         // JSON의 x/y(2D 지면 기준)를 3D 테이블 위 위치로 변환
@@ -157,10 +173,10 @@ namespace SmashPuzzle.Level
         {
             var rb = go.AddComponent<Rigidbody>();
             rb.mass           = mass;
-            // 공기저항을 낮춰야 자연스럽게 날아감 (0.8은 너무 끈적)
             rb.linearDamping  = 0.15f;
-            rb.angularDamping = 0.30f; // 적당한 회전 감쇠 → 자연스러운 텀블링
-            rb.isKinematic    = isKinematic;
+            rb.angularDamping = 0.30f;
+            // 항상 Kinematic으로 시작 — EnablePhysicsAfterDelay 코루틴이 해제
+            rb.isKinematic    = true;
             rb.constraints    = RigidbodyConstraints.None;
 
             // 물리 재질: 마찰·탄성으로 현실감 향상
@@ -209,8 +225,9 @@ namespace SmashPuzzle.Level
 
         public void ClearLevel()
         {
+            // DestroyImmediate: 즉시 제거 → 새 블록 스폰 시 이전 블록과 물리 충돌 없음
             foreach (var go in _spawnedObjects)
-                if (go != null) Destroy(go);
+                if (go != null) DestroyImmediate(go);
             _spawnedObjects.Clear();
             _groups.Clear();
             CurrentLevelData = null;
