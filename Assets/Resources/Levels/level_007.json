@@ -1,0 +1,18 @@
+{
+  "levelId": 7,
+  "chapterId": 1,
+  "projectileCount": 8,
+  "star2Threshold": 3,
+  "star3Threshold": 5,
+  "coinRewardBase": 110,
+  "objects": [
+    { "type": "Wood", "x": -0.9, "y": -5.15, "rotation":  0, "isTarget": false, "groupId": -1 },
+    { "type": "Wood", "x": -0.3, "y": -5.15, "rotation":  0, "isTarget": false, "groupId": -1 },
+    { "type": "Wood", "x":  0.3, "y": -5.15, "rotation":  0, "isTarget": false, "groupId": -1 },
+    { "type": "Wood", "x":  0.9, "y": -5.15, "rotation":  0, "isTarget": false, "groupId": -1 },
+    { "type": "Wood", "x": -0.6, "y": -4.15, "rotation":  0, "isTarget": false, "groupId": -1 },
+    { "type": "Wood", "x":  0.0, "y": -4.15, "rotation":  0, "isTarget": false, "groupId": -1 },
+    { "type": "Wood", "x":  0.6, "y": -4.15, "rotation":  0, "isTarget": false, "groupId": -1 },
+    { "type": "Wood", "x":  0.0, "y": -3.15, "rotation":  0, "isTarget": false, "groupId": -1 }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "levelId": 8,
+  "chapterId": 1,
+  "projectileCount": 7,
+  "star2Threshold": 3,
+  "star3Threshold": 5,
+  "coinRewardBase": 120,
+  "objects": [
+    { "type": "Stone", "x": -0.6, "y": -5.40, "rotation":  0, "isTarget": false, "groupId": -1 },
+    { "type": "Stone", "x":  0.6, "y": -5.40, "rotation":  0, "isTarget": false, "groupId": -1 },
+    { "type": "TNT",   "x": -0.2, "y": -5.35, "rotation":  0, "isTarget": false, "groupId": -1 },
+    { "type": "TNT",   "x":  0.2, "y": -5.35, "rotation":  0, "isTarget": false, "groupId": -1 },
+    { "type": "Wood",  "x": -0.6, "y": -4.65, "rotation":  0, "isTarget": false, "groupId": -1 },
+    { "type": "Wood",  "x":  0.6, "y": -4.65, "rotation":  0, "isTarget": false, "groupId": -1 },
+    { "type": "Wood",  "x":  0.0, "y": -3.93, "rotation": 90, "isTarget": false, "groupId": -1 }
+  ]
+}

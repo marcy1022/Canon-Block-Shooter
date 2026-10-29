@@ -1,0 +1,15 @@
+{
+  "levelId": 12,
+  "chapterId": 1,
+  "projectileCount": 5,
+  "star2Threshold": 1,
+  "star3Threshold": 2,
+  "coinRewardBase": 70,
+  "objects": [
+    {"type": "Pillar", "x": 0.0, "y": -3.8, "rotation": 0, "isTarget": false, "groupId": 1},
+    {"type": "Pillar", "x": 2.0, "y": -3.8, "rotation": 0, "isTarget": false, "groupId": 1},
+    {"type": "Stone",  "x": 1.0, "y": -2.6, "rotation": 0, "isTarget": false, "groupId": 1},
+    {"type": "Jar",    "x": 1.0, "y": -1.8, "rotation": 0, "isTarget": true,  "groupId": -1},
+    {"type": "TNT",    "x": 2.5, "y": -4.2, "rotation": 0, "isTarget": false, "groupId": -1}
+  ]
+}

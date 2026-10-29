@@ -1,0 +1,46 @@
+# Unity generated
+Library/
+Temp/
+Obj/
+Build/
+Builds/
+Logs/
+UserSettings/
+MemoryCaptures/
+
+# Auto-generated VS/Rider files
+*.csproj
+*.unityproj
+*.sln
+*.suo
+*.tmp
+*.user
+*.userprefs
+*.pidb
+*.booproj
+*.svd
+*.pdb
+*.mdb
+*.opendb
+*.VC.db
+
+# Compiled Dynamic Libraries
+*.dll
+*.pyd
+
+# Unity3D generated meta files are pulled from the repo on demand
+# *.meta
+
+# Unity3D generated file on crash reports
+sysinfo.txt
+
+# Builds
+*.apk
+*.unitypackage
+*.aab
+
+# Crashlytics generated file
+crashlytics-build.properties
+
+# Dotenv
+.env
